@@ -34,30 +34,72 @@
             <v-row>
                 <v-container>
                     <v-row>
+                      <!-- about -->
                         <v-col cols="7">
                             <v-row>
-                                <v-col class="text-h3">
+                                <v-col class="text-h4 font-weight-medium pb-10 pt-10">
                                     Connect with friends and world around you on Facebook.
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-icon size="100">mdi-newspaper-variant</v-icon> See photos and updates.
+                                    <v-icon size="70">mdi-newspaper-variant</v-icon> 
+                                    <span class="font-weight-bold pl-12">See photos and updates </span>
+                                    <span>from friends in News Feed.</span> 
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    Share what's new.
+                                    <v-icon size="70">mdi-monitor-share</v-icon>
+                                    <span class="font-weight-bold pl-12">Share what's new </span>
+                                    <span>in your life on your Timeline.</span>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    Find more.
+                                    <v-icon size="70">mdi-share-variant-outline</v-icon>
+                                  <span class="font-weight-bold pl-12">Find more </span>
+                                    <span>of what you are looking for with Graph Search.</span>           
                                 </v-col>
                             </v-row>
                         </v-col>
+                        <!-- sign up -->
                         <v-col cols="5">
-                            <p>Sign up</p>            
+                          <p>Sign Up</p> 
+                          <p>It's free and always will be.</p>
+                          <v-row>
+                            <v-col cols="6" class="pt-2 pb-2 pr-2">
+                              <v-text-field placeholder="First Name" outlined background-color="white" dense hide-details></v-text-field>
+                            </v-col>
+                            <v-col cols="6" class="pt-2 pb-2 pl-2">
+                              <v-text-field placeholder="Last Name" outlined background-color="white" dense hide-details></v-text-field>
+                            </v-col>
+                          </v-row>
+                           <v-row>
+                            <v-col class="pt-2 pb-2">
+                              <v-text-field placeholder="Email or mobile number" outlined background-color="white" dense hide-details></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col class="pt-2 pb-2">
+                              <v-text-field placeholder="Re-enter email or mobile number" outlined background-color="white" dense hide-details></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col class="pt-2 pb-2">
+                              <v-text-field placeholder="New password" outlined background-color="white" dense hide-details></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <p>Birthday</p>
+                          <v-row>
+                            <v-col>
+                              <v-select>
+                                
+                              </v-select>
+                            </v-col>
+                          </v-row>
+                          
+                          
                         </v-col>
                     </v-row>
                 </v-container>
