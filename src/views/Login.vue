@@ -154,6 +154,8 @@ export default {
     },
     methods:{
       login(){
+        // at login send http request containing email and password  to backend
+        // use nina 1234 to go through
         var user = {
           email: this.email,
           password: this.password
@@ -163,13 +165,16 @@ export default {
         })
         .then(response => {
           console.log(response)
+          sessionStorage.setItem('id', response.data._id);
+          this.$router.push({ name: 'home', params: { id: response.data._id } })
+          // if user is authenticated 
+          // save email and password to local storage 
+          //push him to home page
+
         })
         .catch(error => {
           console.log(error)
         })
-      
-        // send axios.post to backend
-        // if user is authenticatd, save email and password to local storage
       }
     }
 }
