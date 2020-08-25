@@ -1,41 +1,19 @@
 <template>
     <div>
-        <p class="pt-3" @click="toggleCity"><v-icon>mdi-plus</v-icon><span>Add city where you live</span></p>
-        <v-row>
-                <v-col class="pa-0">
-                    <v-textarea v-if="addCity" v-model="city" placeholder="What is on your mind?" solo flat hide-details rows="1"></v-textarea>
-                </v-col>
-            </v-row>
-            <v-row class="white" justify="end">
-                <v-col cols="auto">
-                    <v-btn @click="add" color="primary">Add</v-btn>
-                </v-col>
-            </v-row>
-
-        <p>22.1.1990.</p>
-        <p>Gradevinski fakultet Zagreb</p>
-        <p>Odjel za prostorno uredjenje</p>
-        <p>Ozenjen</p>
+       <p class="grey--text text-uppercase text-subtitle-1 mb-0">Basic info</p>
+       <div id="divider" style="background-color:#edf0f5; height: 3px; width:100%;"></div>
+       <p v-if="this.editedcity!=='' &&  this.editedcity!=undefined">Lives in <span>{{editedcity}}</span></p>
+       <p @click.stop="$emit('opendialog')" v-else><v-icon color="primary">mdi-plus</v-icon> <span class="primary--text"> Add a city where you are living</span></p>
     </div>
 </template>
 
 <script>
 export default {
     data: function(){
-        return {
-            dateOfBirth: '',
-            email: '',
-            city: '',
-            addCity: false
+        return{
+            
         }
     },
-    methods:{
-        toggleCity(){
-            this.addCity = !this.addCity
-        },
-        add(){
-           
-        }
-    }
+    props: ['editedcity'],
 }
 </script>

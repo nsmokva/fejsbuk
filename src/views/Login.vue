@@ -166,6 +166,7 @@ export default {
         .then(response => {
           console.log(response)
           sessionStorage.setItem('id', response.data._id);
+          sessionStorage.setItem('name', response.data.firstName);
           this.$router.push({ name: 'home', params: { id: response.data._id } })
           // if user is authenticated 
           // save email and password to local storage 
