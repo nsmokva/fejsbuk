@@ -41,7 +41,10 @@
                 <p class="grey--text text-center text-caption">Add short introduction so that people would know more about you.</p>
                 <p class="primary--text text-center text-caption" @click="opentextarea = !opentextarea">Add introduction</p>
                 </template>
-                <p v-else>{{introduction}}</p>
+                <template v-else> 
+                    <p>{{introduction}}</p>
+                    <p v-if="profileBelongsToLoggedInUser()" class="text-capitalize primary--text text-caption text-center" @click = "opentextarea = true">Change Introduction</p>
+                </template>
             </v-col>
             </template>
 
@@ -60,27 +63,37 @@ export default {
             opentextarea: false
         }
     },
+    props: ['id'],
     methods: {
         save(){
           axios.post('/backend/user/userdata/introduction', {
-            id: sessionStorage.getItem('id'),
+            id: this.id,
             introduction: this.introduction,
-        })
-        .then(response => {
-            console.log(response);
-            console.log(response.data.introduction)
-            this.introduction = response.data.introduction
-            this.opentextarea = false
-            console.log(this.introduction)
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+            })
+            .then(response => {
+                console.log(response);
+                console.log(response.data.introduction)
+                this.introduction = response.data.introduction
+                this.opentextarea = false
+                console.log(this.introduction)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+        profileBelongsToLoggedInUser(){
+            var profileOwnerId = this.id
+            var loggedInUserId = sessionStorage.getItem("id")
+            if(profileOwnerId == loggedInUserId){
+                return true
+            }else{
+                return false
+            }
         }
     },
     created(){
         axios.get('/backend/user', {params: {
-            id: sessionStorage.getItem('id')
+            id: this.id
         }})
         .then(response => {
             console.log(response)

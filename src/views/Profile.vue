@@ -7,7 +7,8 @@
                     <v-avatar color="grey lighten-2" size="245" class="mt-12 ml-4 nina">
                         <v-avatar color="white" size="240">
                             <v-avatar size="230">
-                                <v-img :src="require('../../public/Ivica.jpg')"></v-img>
+                                <span class="primary--text headline">{{name.firstName}}</span>
+                                <!-- <v-img :src="require('../../public/Ivica.jpg')"></v-img> -->
                             </v-avatar>
                         </v-avatar>
                     </v-avatar>
@@ -48,19 +49,26 @@ export default {
             }
         }
     },
+    methods:{
+        askforuserdata(){
+            axios.get('/backend/user', {params: {
+            id: this.$route.params.id
+            }})
+            .then(response => {
+                console.log(response)
+                this.name.firstName = response.data.firstName
+                this.name.lastName = response.data.lastName
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
+    },
     created (){
-        axios.get('/backend/user', {params: {
-            id: sessionStorage.getItem('id')
-        }})
-        .then(response => {
-            console.log(response)
-            this.name.firstName = response.data.firstName
-            this.name.lastName = response.data.lastName
-        })
-        .catch(error => {
-            console.log(error)
-        })
-
+       this.askforuserdata();
+    },
+    updated (){
+       this.askforuserdata();
     }
     
 }

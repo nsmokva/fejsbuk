@@ -2,7 +2,7 @@
    <div>
        <v-container>
             <v-row class="white" align="center">
-                <v-col cols="auto"><v-icon size="50">mdi-account</v-icon></v-col>
+                <v-col cols="auto"><v-icon size="50" color="grey">mdi-account</v-icon></v-col>
                 <v-col cols="auto"><span class="text-h5 grey--text font-weight-bold">Information</span></v-col>
             </v-row>
             <v-row class="white">
@@ -14,7 +14,7 @@
                 </v-col>
                 <v-col cols="8">
                   <router-view :editedcity="editcity" :editedemail2="editemail2" :editedjob="editjob" :editededucation="editeducation" v-on:opendialog="opendialog"></router-view>
-                   <v-row class="white" justify="end">
+                   <v-row class="white" justify="end" v-if="profileBelongsToLoggedInUser()">
                         <v-col cols="auto">
                             <v-dialog v-model="dialog" width="500">
                                 <template v-slot:activator="{ on, attrs }">
@@ -58,6 +58,7 @@ export default {
             editeducation:'',
         }
     },
+    props:['id'],
      methods:{
         save(){
           axios.post('/backend/user/userdata', {
@@ -82,11 +83,20 @@ export default {
         },
         opendialog(){
             this.dialog = true
+        },
+         profileBelongsToLoggedInUser(){
+            var profileOwnerId = this.id
+            var loggedInUserId = sessionStorage.getItem("id")
+            if(profileOwnerId == loggedInUserId){
+                return true
+            }else{
+                return false
+            }
         }   
     },
      created(){
         axios.get('/backend/user', {params: {
-            id: sessionStorage.getItem('id')
+            id: this.id
         }})
         .then(response => {
             console.log(response)

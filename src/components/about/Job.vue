@@ -1,11 +1,22 @@
 <template>
     <div>
-       <p class="grey--text text-uppercase text-subtitle-1 mb-0">Job and Education</p>
-       <div id="divider" style="background-color:#edf0f5; height: 3px; width:100%;"></div>
-       <p v-if="this.editedjob!=='' &&  this.editedjob!=undefined">Working at: {{editedjob}}</p>
-       <p @click.stop="$emit('opendialog')" v-else><v-icon color="primary">mdi-plus</v-icon> <span class="primary--text"> Add a workplace</span></p>
-       <p v-if="this.editededucation!=='' &&  this.editededucation!=undefined">School: <span>{{editededucation}}</span></p>
-       <p @click.stop="$emit('opendialog')" v-else><v-icon color="primary">mdi-plus</v-icon> <span class="primary--text"> Add info about your education</span></p>
+        <template v-if="profileBelongsToLoggedInUser()">
+            <p class="grey--text text-uppercase text-subtitle-1 mb-0">Job and Education</p>
+            <div id="divider" style="background-color:#edf0f5; height: 3px; width:100%;"></div>
+            <p v-if="this.editedjob!=='' &&  this.editedjob!=undefined">Working at: {{editedjob}}</p>
+            <p @click.stop="$emit('opendialog')" v-else><v-icon color="primary">mdi-plus</v-icon> <span class="primary--text"> Add a workplace</span></p>
+            <p v-if="this.editededucation!=='' &&  this.editededucation!=undefined">School: <span>{{editededucation}}</span></p>
+            <p @click.stop="$emit('opendialog')" v-else><v-icon color="primary">mdi-plus</v-icon><span class="primary--text"> Add info about your education</span></p>
+        </template>
+
+        <template v-else>
+            <template v-if="this.editedjob!=='' &&  this.editedjob!=undefined || this.editededucation!=='' &&  this.editededucation!=undefined">
+                <p class="grey--text text-uppercase text-subtitle-1 mb-0">Job and Education</p>
+                <div id="divider" style="background-color:#edf0f5; height: 3px; width:100%;"></div>
+            </template>
+            <p v-if="this.editedjob!=='' &&  this.editedjob!=undefined">Working at: {{editedjob}}</p>
+            <p v-if="this.editededucation!=='' &&  this.editededucation!=undefined">School: <span>{{editededucation}}</span></p>
+        </template>
     </div>
 </template>
 
@@ -16,7 +27,18 @@ export default {
             
         }
     },
-    props: ['editedjob', 'editededucation'],
+    props: ['editedjob', 'editededucation', 'id'],
+    methods:{
+         profileBelongsToLoggedInUser(){
+            var profileOwnerId = this.id
+            var loggedInUserId = sessionStorage.getItem("id")
+            if(profileOwnerId == loggedInUserId){
+                return true
+            }else{
+                return false
+            }
+        }   
+    }
 }
 </script>
 

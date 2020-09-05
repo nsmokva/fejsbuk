@@ -31,21 +31,25 @@ Vue.use(VueRouter)
       name: 'profile',
       component: Profile,
       meta: {requiresAuth: true},
+      props: true,
       children: [
         {
           path: 'timeline',
           name: 'timeline',
-          component: Timeline
+          component: Timeline,
+          props: true
         },
         {
           path: 'about',
           name: 'about',
           component: About,
+          props: true,
           children: [
             {
               path: 'allinfo',
               name: 'allinfo',
-              component: AllInfo
+              component: AllInfo,
+              props:true
             },
             {
               path: 'basicinfo',
@@ -67,7 +71,8 @@ Vue.use(VueRouter)
         {
           path: 'friends',
           name: 'friends',
-          component: Friends
+          component: Friends,
+          props: true
         },
       ]
     },

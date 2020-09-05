@@ -1,7 +1,7 @@
 <template>
     <div>
         <p>Home page</p>
-        <v-btn :to= "{ name: 'timeline', params: { id: this.$route.params.id }}">Go To Profile</v-btn>
+        <v-btn :to= "{ name: 'timeline', params: { id: id }}">Go To Profile</v-btn>
         {{name}}
     </div>
 </template>
@@ -10,12 +10,14 @@
 export default {
     data: function(){
         return{
-            name:''
+            name:'',
+            id: ''
         }
     },
     created(){
         console.log ('created')
         this.name = sessionStorage.getItem('name');
+        this.id = sessionStorage.getItem('id');
         //var name = sessionStorage.getItem('name');
         this.$emit('grabname', this.name)
     }
