@@ -33,11 +33,68 @@
                         </v-row>
                     </v-container>
                     </v-card>
+
+
                     <v-container v-for="status in statuses" :key="status._id">
                         <v-card flat outlined>
                             <v-row class="white">
                                 <v-col cols="12">
-                                    {{status.status}}
+                                    <v-row justify="space-between">
+                                        <v-col cols="auto">
+                                           <p class="primary--text font-weight-medium mb-0">{{status.ownerFirstName}} {{status.ownerLastName}}</p>
+                                           <span class="font-weight-light text-caption">{{formatDate(status.date)}}</span>
+                                        </v-col>
+                                        <v-col v-if="profileBelongsToLoggedInUser()" cols="auto">
+                                           
+
+
+
+                                         <v-menu offset-y nudge-bottom="8" left tile>
+                                            <template v-slot:activator="{ on, attrs }">
+                                             <v-icon v-bind="attrs" v-on="on">mdi-dots-horizontal</v-icon>
+                                            </template>
+                                            <v-list>
+                                            <v-list-item class="py-0 px-12">
+                                                <v-list-item-title>Edit</v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item @click="erase(status._id)" class="py-0 px-12">
+                                                <v-list-item-title>Delete</v-list-item-title>
+                                            </v-list-item>
+                                            </v-list>
+                                        </v-menu>
+
+
+
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col>
+                                            {{status.status}}
+                                        </v-col>
+                                    </v-row>
+                                    <v-divider></v-divider>
+                                    <v-row justify="space-around">
+                                        <v-col cols="auto">
+                                            <v-icon color="grey">mdi-thumb-up-outline</v-icon>
+                                            <span class="grey--text font-weight-medium"> Like</span>
+                                        </v-col>
+                                        <v-col cols="auto" @click="status.openCommentField = !status.openCommentField">
+                                            <v-icon color="grey">mdi-comment-outline</v-icon>
+                                            <span class="grey--text font-weight-medium"> Comment</span>
+                                        </v-col>
+                                    </v-row>
+                                    <v-divider></v-divider>
+                                    <v-row v-if="status.openCommentField" align="center">
+                                        <v-col cols="auto">
+                                            <v-avatar  color="secondary" size="50">
+                                                <span class="primary--text text-caption">{{logedInUserName}}</span>
+                                                <!-- <v-img :src="require('../../public/Ivica.jpg')"></v-img> -->
+                                            </v-avatar>
+                                        </v-col>
+                                        <v-col>
+                                            <v-text-field placeholder="Comment..." outlined background-color="secondary" dense hide-details></v-text-field>
+                                        </v-col>
+                                    </v-row>
                                 </v-col>
                             </v-row>
                         </v-card>
@@ -54,14 +111,16 @@
 import Intro from './timeline/Intro.vue'
 import Friends from './Friends.vue'
 import axios from 'axios'
+import moment from 'moment';
 export default {
     data: function(){
         return{
             newStatus: '',
-            statuses: []
+            statuses: [],
+            logedInUserName: ''
         }
     },
-    props: ['id'],
+    props: ['id', 'firstName', 'lastName'],
     components:{
         Intro,
         Friends
@@ -70,6 +129,7 @@ export default {
          profileBelongsToLoggedInUser(){
             var profileOwnerId = this.id
             var loggedInUserId = sessionStorage.getItem("id")
+            this.logedInUserName = sessionStorage.getItem("name")
             if(profileOwnerId == loggedInUserId){
                 return true
             }else{
@@ -77,18 +137,43 @@ export default {
             }
         },
         save(){
-          axios.post('/backend/statuses', {
-            ownerId: sessionStorage.getItem('id'),
-            status: this.newStatus,       
-        })
-        .then(response => {
-            console.log(response);
-            //find a way to rerender a Timeline component here
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+            var now = moment();
+            console.log('logging moment: ', now, 'typeof:', typeof(now))
+            console.log('post axios', this.firstName, this.lastName)
+            axios.post('/backend/statuses', {
+                ownerId: sessionStorage.getItem('id'),
+                status: this.newStatus, 
+                ownerFirstName: this.firstName,
+                ownerLastName: this.lastName,
+                date: now   
+            })
+            .then(response => {
+                console.log('response of posting new status', response.data.status);
+                response.data.openCommentField = false
+                this.statuses.unshift(response.data)
+                this.newStatus = ''
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         },
+        erase(statusId){
+            console.log('status id: ', statusId)
+            axios.delete('/backend/statuses/:id', {
+                params: {
+                    id: statusId
+                }
+            })
+            .then(response => {
+                console.log('response: ', response.data)
+                var statusesAfterOneHasBeenDeleted = this.statuses.filter(status => status._id !== statusId);
+                this.statuses = statusesAfterOneHasBeenDeleted
+
+            })
+        },
+        formatDate(date){
+            return moment(date).format("MMMM Do YYYY")
+        }
     },
    created(){
         axios.get('/backend/statuses', {params: {
@@ -96,8 +181,12 @@ export default {
         }})
         .then(response => {
             console.log('logging statuses')
-            this.statuses = response.data
-            console.log('statuses from timeline', this.statuses)
+            response.data.forEach(status => {
+                status.openCommentField = false
+            });
+            //change the order from newer to older
+           this.statuses = response.data.reverse()
+           console.log('edited status array: ', this.statuses)
         })
         .catch(error => {
             console.log(error)

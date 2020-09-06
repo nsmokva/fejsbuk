@@ -33,7 +33,7 @@
                      <v-divider vertical></v-divider>
                 </v-row>
             </v-container>
-            <router-view></router-view>
+            <router-view :firstName="name.firstName" :lastName="name.lastName"></router-view>
         </v-container>
     </div>
 </template>
