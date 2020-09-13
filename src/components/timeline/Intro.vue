@@ -21,7 +21,7 @@
                             
                              <v-col cols="auto">
                                 <v-card flat outlined color="grey lighten-1" tile>
-                                    <v-btn color="secondary" class="black--text text-capitalize" depressed tile small>Cancel</v-btn>
+                                    <v-btn color="secondary" class="black--text text-capitalize" depressed tile small @click="opentextarea = !opentextarea">Cancel</v-btn>
                                 </v-card>
                             </v-col>
                             <v-col cols="auto">

@@ -72,9 +72,36 @@
                                             {{status.status}}
                                         </v-col>
                                     </v-row>
+
+                                    <v-row >
+                                        <v-col v-if="status.likes.length != 0" cols="auto">
+                                            <v-dialog width="500">
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-col v-bind="attrs" v-on="on" >
+                                                        <v-icon color="primary" size="15">mdi-thumb-up-outline</v-icon>
+                                                        <span class="grey--text text-caption"> {{status.likes.length}} people like this</span>
+                                                    </v-col>
+                                                </template>
+                                                <v-card class="pa-6">
+                                                    <v-icon color="primary" size="15">mdi-thumb-up-outline</v-icon>
+                                                    <span class="grey--text text-caption"> {{status.likes.length}}</span>
+                                                    <v-divider></v-divider>
+                                                    <p v-for="like in status.likes" :key="like" class="grey--text text-subtitle-1 mb-0 mt-4">{{like}}</p>
+                                                </v-card>
+                                            </v-dialog>
+                                        </v-col>
+                                        <v-col v-if="status.comments.length != 0" cols="auto" align-self="center">
+                                            <span class="grey--text text-caption"> {{status.comments.length}} comments</span>
+                                        </v-col>
+                                    </v-row>
+
+                                   
+
+
+
                                     <v-divider></v-divider>
                                     <v-row justify="space-around">
-                                        <v-col cols="auto">
+                                        <v-col cols="auto" @click="like(status._id)">
                                             <v-icon color="grey">mdi-thumb-up-outline</v-icon>
                                             <span class="grey--text font-weight-medium"> Like</span>
                                         </v-col>
@@ -86,13 +113,35 @@
                                     <v-divider></v-divider>
                                     <v-row v-if="status.openCommentField" align="center">
                                         <v-col cols="auto">
-                                            <v-avatar  color="secondary" size="50">
+                                            <v-avatar  color="secondary" size="35">
                                                 <span class="primary--text text-caption">{{logedInUserName}}</span>
                                                 <!-- <v-img :src="require('../../public/Ivica.jpg')"></v-img> -->
                                             </v-avatar>
                                         </v-col>
                                         <v-col>
-                                            <v-text-field placeholder="Comment..." outlined background-color="secondary" dense hide-details></v-text-field>
+                                            <v-text-field v-model="comment" placeholder="Comment... and click enter to post it" outlined background-color="secondary" dense hide-details @keyup.enter="postComment(status._id)"></v-text-field>
+                                        </v-col>
+                                    </v-row>
+
+
+
+
+                                    <v-row v-for="comment in status.comments" :key="comment._id">
+                                        <v-col cols="auto" class="pa-1">
+                                            <v-avatar  color="secondary" size="35">
+                                                <span class="primary--text text-caption">{{comment.ownerFirstName}}</span>
+                                                <!-- <v-img :src="require('../../public/Ivica.jpg')"></v-img> -->
+                                            </v-avatar>
+                                        </v-col>
+                                        <v-col cols="auto" class="pa-0" align-self="center">
+
+
+                                        <v-chip color="secondary">
+                                            <span class="primary--text font-weight-medium">{{comment.ownerFirstName}} {{comment.ownerLastName}} </span>
+                                            <span class="black--text pl-2"> {{comment.comment}}</span>
+                                        </v-chip>
+
+                                            
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -117,7 +166,8 @@ export default {
         return{
             newStatus: '',
             statuses: [],
-            logedInUserName: ''
+            logedInUserName: '',
+            comment: ''
         }
     },
     props: ['id', 'firstName', 'lastName'],
@@ -170,6 +220,51 @@ export default {
                 this.statuses = statusesAfterOneHasBeenDeleted
 
             })
+        },
+        like(id){
+            var name = sessionStorage.getItem('name');
+            var lastName = sessionStorage.getItem('lastName')
+            var like = name + ' ' + lastName
+            console.log('id is ', id)
+            axios.post('/backend/statuses/likes', {
+                id: id,
+                like: like
+            })
+             .then(response => {
+                console.log('response is:', response)
+                const currentStatus = this.statuses.find(status => status._id === id);
+                console.log('before -- curentStatus: ', currentStatus)
+                currentStatus.likes = response.data.likes
+                console.log('after -- curentStatus: ', currentStatus)
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+        postComment(id){
+           
+            var name = sessionStorage.getItem('name');
+            var lastName = sessionStorage.getItem('lastName')
+            var ownerId = sessionStorage.getItem('id');
+            axios.post('/backend/statuses/comments', {
+                statusId: id,
+                ownerName: name,
+                ownerLastName: lastName,
+                ownerId: ownerId,
+                date:  moment(),
+                comment: this.comment
+
+            })
+             .then(response => {
+                console.log('response is:', response)
+                
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+            
         },
         formatDate(date){
             return moment(date).format("MMMM Do YYYY")
