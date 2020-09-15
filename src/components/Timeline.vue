@@ -127,19 +127,30 @@
 
 
                                     <v-row v-for="comment in status.comments" :key="comment._id">
-                                        <v-col cols="auto" class="pa-1">
+                                        <v-col cols="auto" class="pl-1 pb-0">
                                             <v-avatar  color="secondary" size="35">
                                                 <span class="primary--text text-caption">{{comment.ownerFirstName}}</span>
                                                 <!-- <v-img :src="require('../../public/Ivica.jpg')"></v-img> -->
                                             </v-avatar>
                                         </v-col>
-                                        <v-col cols="auto" class="pa-0" align-self="center">
+                                        <v-col cols="auto" class="pa-0">
+                                          
+                                          <v-row>
+                                            <v-col cols="12" align-self="center" class="pb-0">
+                                              <v-chip color="secondary">
+                                                <span class="primary--text font-weight-medium">{{comment.ownerFirstName}} {{comment.ownerLastName}} </span>
+                                                <span class="black--text pl-2"> {{comment.comment}}</span>
+                                              </v-chip>
+                                            </v-col>
+                                            <v-col class="pt-0 pb-1">
+                                              <span class="grey--text text-caption pr-4 pl-2">{{formatDate(comment.date)}}</span>
+                                              <span class="grey--text text-caption" @click="eraseComment(comment._id)">Erase</span>
+                                            </v-col>
+                                        
+                                            
+                                          </v-row>
 
-
-                                        <v-chip color="secondary">
-                                            <span class="primary--text font-weight-medium">{{comment.ownerFirstName}} {{comment.ownerLastName}} </span>
-                                            <span class="black--text pl-2"> {{comment.comment}}</span>
-                                        </v-chip>
+                                      
 
                                             
                                         </v-col>
@@ -221,6 +232,19 @@ export default {
 
             })
         },
+        eraseComment(commentId){
+            console.log('comment id: ', commentId)
+            axios.delete('/backend/comments/:id', {
+                params: {
+                    id: commentId
+                }
+            })
+            .then(response => {
+                console.log('response: ', response.data)
+              
+
+            })
+        },
         like(id){
             var name = sessionStorage.getItem('name');
             var lastName = sessionStorage.getItem('lastName')
@@ -271,6 +295,7 @@ export default {
         }
     },
    created(){
+     console.log('id from created ', this.id)
         axios.get('/backend/statuses', {params: {
             ownerId: this.id
         }})
