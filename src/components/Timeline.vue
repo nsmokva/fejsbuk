@@ -144,7 +144,7 @@
                                             </v-col>
                                             <v-col class="pt-0 pb-1">
                                               <span class="grey--text text-caption pr-4 pl-2">{{formatDate(comment.date)}}</span>
-                                              <span class="grey--text text-caption" @click="eraseComment(comment._id)">Erase</span>
+                                              <span v-if="commentBelongsToLoggedInUser(comment.ownerId)" class="grey--text text-caption" @click="eraseComment(status._id, comment._id)">Erase</span>
                                             </v-col>
                                         
                                             
@@ -197,6 +197,14 @@ export default {
                 return false
             }
         },
+      commentBelongsToLoggedInUser(commentOwnerId){
+            var loggedInUserId = sessionStorage.getItem("id")
+            if(commentOwnerId == loggedInUserId){
+                return true
+            }else{
+                return false
+            }
+        },
         save(){
             var now = moment();
             console.log('logging moment: ', now, 'typeof:', typeof(now))
@@ -232,16 +240,16 @@ export default {
 
             })
         },
-        eraseComment(commentId){
-            console.log('comment id: ', commentId)
-            axios.delete('/backend/comments/:id', {
-                params: {
-                    id: commentId
-                }
+        eraseComment(statusId, commentId){
+            console.log('status id: ', statusId)
+            axios.post('/backend/comments/delete', {
+                    id: statusId,
+                    commentId: commentId
             })
             .then(response => {
                 console.log('response: ', response.data)
-              
+                const currentStatus = this.statuses.find(status => status._id === statusId);
+                currentStatus.comments = response.data.comments
 
             })
         },
@@ -282,6 +290,10 @@ export default {
             })
              .then(response => {
                 console.log('response is:', response)
+               const currentStatus = this.statuses.find(status => status._id === id);
+                currentStatus.comments = response.data.comments
+                this.comment = ''
+              
                 
             })
 
