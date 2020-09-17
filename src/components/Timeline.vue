@@ -11,7 +11,7 @@
                         </v-col>
                     </v-row>
                     <v-row>
-                        <v-col>
+                        <v-col class="pt-0">
                             <friends :id='id'></friends>
                         </v-col>
                     </v-row>
@@ -312,13 +312,11 @@ export default {
             ownerId: this.id
         }})
         .then(response => {
-            console.log('logging statuses')
             response.data.forEach(status => {
                 status.openCommentField = false
             });
             //change the order from newer to older
            this.statuses = response.data.reverse()
-           console.log('edited status array: ', this.statuses)
         })
         .catch(error => {
             console.log(error)
@@ -330,9 +328,11 @@ export default {
             ownerId: to.params.id
         }})
         .then(response => {
-            console.log('logging statuses')
-            this.statuses = response.data
-            console.log('statuses from timeline', this.statuses)
+            response.data.forEach(status => {
+                status.openCommentField = false
+            });
+            //change the order from newer to older
+           this.statuses = response.data.reverse()
         })
         .catch(error => {
             console.log(error)

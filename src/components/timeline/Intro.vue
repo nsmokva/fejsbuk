@@ -1,5 +1,5 @@
 <template>
-    <v-card flat outlined>
+    <v-card v-if="this.introduction != '' && this.introduction != undefined" flat outlined>
         <v-container>
         <v-row>
             <v-col class="py-0 pr-0">
@@ -37,14 +37,22 @@
 
             <template v-else>
             <v-col cols="auto">
-                <template v-if="this.introduction == '' || this.introduction == undefined">
-                <p class="grey--text text-center text-caption">Add short introduction so that people would know more about you.</p>
-                <p class="primary--text text-center text-caption" @click="opentextarea = !opentextarea">Add introduction</p>
+                <template v-if="profileBelongsToLoggedInUser()">
+                    <template v-if="this.introduction == '' || this.introduction == undefined">
+                        <p class="grey--text text-center text-caption">Add short introduction so that people would know more about you.</p>
+                        <p class="primary--text text-center text-caption" @click="opentextarea = !opentextarea">Add introduction</p>
+                    </template>
+                    <template v-else> 
+                        <p>{{introduction}}</p>
+                        <p class="text-capitalize primary--text text-caption text-center" @click = "opentextarea = true">Change Introduction</p>
+                    </template>
                 </template>
-                <template v-else> 
-                    <p>{{introduction}}</p>
-                    <p v-if="profileBelongsToLoggedInUser()" class="text-capitalize primary--text text-caption text-center" @click = "opentextarea = true">Change Introduction</p>
+                
+                <template v-else>
+                    {{introduction}}
                 </template>
+
+                
             </v-col>
             </template>
 
@@ -102,7 +110,21 @@ export default {
         .catch(error => {
             console.log(error)
         })
+    },
+    watch:{
+    $route (to){
+         axios.get('/backend/user', {params: {
+            id: to.params.id
+        }})
+        .then(response => {
+            console.log(response)
+            this.introduction = response.data.introduction
+        })
+        .catch(error => {
+            console.log(error)
+        })
     }
+} 
 }
 </script>
 

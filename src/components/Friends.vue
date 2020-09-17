@@ -90,5 +90,20 @@ export default {
             }
         }
     },
+    watch:{
+    $route (to){
+        axios.get('/backend/users')
+        .then(response => {
+            console.log(response.data)
+            var allUsers = response.data
+            this.users = allUsers.filter(item => item._id != to.params.id); 
+            console.log(this.id)
+            console.log(this.users)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+} 
 }
 </script>
