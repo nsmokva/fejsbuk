@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="this.introduction != '' && this.introduction != undefined" flat outlined>
+    <v-card flat outlined>
         <v-container>
         <v-row>
             <v-col class="py-0 pr-0">
@@ -51,12 +51,8 @@
                 <template v-else>
                     {{introduction}}
                 </template>
-
-                
             </v-col>
             </template>
-
-
         </v-row>
         </v-container>
     </v-card>

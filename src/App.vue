@@ -14,7 +14,7 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="auto" align-self="center">
-         <router-link :to = "{ name: 'timeline', params: { id: this.id }}"><span class="white--text text-h6">{{name}}</span></router-link>
+         <router-link :to = "{ name: 'timeline', params: { id: id }}"><span class="white--text text-h6">{{name}}</span></router-link>
         </v-col>
          <v-col cols="auto" align-self="center">
          <router-link :to = "{ name: 'home'}"><span class="white--text text-h6">Home</span></router-link>
@@ -65,7 +65,8 @@ export default {
   },
   methods:{
     ongrabname(namesentinevent){
-      this.name = namesentinevent
+      this.name = namesentinevent.name
+      this.id = namesentinevent.id
       console.log('ongrabname')
     },
     logout(){

@@ -19,7 +19,7 @@
 
                 <!-- things on the left -->
                 <v-col cols="8" class="pr-0">
-                    <v-card flat outlined v-if="profileBelongsToLoggedInUser()"> 
+                    <v-card flat outlined v-if="profileBelongsToLoggedInUser()" class="mb-3"> 
                     <v-container class="pt-0">
                         <v-row>
                             <v-col>
@@ -35,7 +35,7 @@
                     </v-card>
 
 
-                    <v-container v-for="status in statuses" :key="status._id">
+                    <v-container v-for="status in statuses" :key="status._id" class="pt-0">
                         <v-card flat outlined>
                             <v-row class="white">
                                 <v-col cols="12">
@@ -79,7 +79,7 @@
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-col v-bind="attrs" v-on="on" >
                                                         <v-icon color="primary" size="15">mdi-thumb-up-outline</v-icon>
-                                                        <span class="grey--text text-caption"> {{status.likes.length}} people like this</span>
+                                                        <span class="grey--text text-caption"> {{status.likes.length}} {{likeOrLikes(status.likes.length)}} this</span>
                                                     </v-col>
                                                 </template>
                                                 <v-card class="pa-6">
@@ -91,7 +91,7 @@
                                             </v-dialog>
                                         </v-col>
                                         <v-col v-if="status.comments.length != 0" cols="auto" align-self="center">
-                                            <span class="grey--text text-caption"> {{status.comments.length}} comments</span>
+                                            <span class="grey--text text-caption"> {{status.comments.length}} {{commentOrComments(status.comments.length)}}</span>
                                         </v-col>
                                     </v-row>
 
@@ -228,7 +228,7 @@ export default {
         },
         erase(statusId){
             console.log('status id: ', statusId)
-            axios.delete('/backend/statuses/:id', {
+            axios.delete('/backend/statuses/', {
                 params: {
                     id: statusId
                 }
@@ -303,7 +303,37 @@ export default {
             
         },
         formatDate(date){
-            return moment(date).format("MMMM Do YYYY")
+            //return moment(date).fromNow()
+            // return moment(date).format("MMMM Do YYYY")
+            var unixDate = moment(date).format("x")
+            var unixNow = moment().format("x")
+            var yearDate = moment(date).format("YYYY")
+            var yearNow = moment().format("YYYY")
+            console.log(yearDate, yearNow)
+            var timeDifference = unixNow - unixDate 
+            console.log(timeDifference)
+            if(timeDifference < (7*24*60*60*1000)){                                 //if item was posted in less than 7 days 
+                return moment(date).fromNow()
+            }
+            else if (yearDate == yearNow){                                          // if item was posted in current year           
+                return moment(date).format("MMMM Do")
+            }else {                                                                 // if item was posted in any year preceding current year
+                return moment(date).format("MMMM Do YYYY")
+            }                                           
+        },
+        commentOrComments(number){
+            if(number == 1){
+                return 'comment'
+            }else{
+                return 'comments'
+            }
+        },
+        likeOrLikes(number){
+            if(number == 1){
+                return 'person likes'
+            }else{
+                return 'people like'
+            }
         }
     },
    created(){

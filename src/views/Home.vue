@@ -19,7 +19,7 @@ export default {
         this.name = sessionStorage.getItem('name');
         this.id = sessionStorage.getItem('id');
         //var name = sessionStorage.getItem('name');
-        this.$emit('grabname', this.name)
+        this.$emit('grabname', {name: this.name, id: this.id})
     }
 }
 </script>
