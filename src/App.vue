@@ -6,11 +6,26 @@
        <v-row>
         <v-col cols="1">
         </v-col>
-        <v-col cols="auto">
+        <v-col cols="auto" class="py-0" align-self="center">
           <v-icon color="white" size="40">mdi-facebook</v-icon>
         </v-col>
-        <v-col cols="3" align-self="center">
-          <v-text-field v-model="search" class="pt-0 mt-0" background-color="white" hide-details></v-text-field>
+        <v-col cols="3" align-self="center" class="pa-0">
+          <!-- <v-text-field v-model="search" class="pt-0 mt-0" background-color="white" hide-details></v-text-field> -->
+          <v-autocomplete
+          v-model="search"
+          :items="users"
+          :filter="customFilter"
+          color="white"
+          item-text="fullName"
+          label="Search"
+          auto-select-first
+          clearable
+          solo
+          hide-details
+          dense
+          @change='autocompleteChanged'
+      ></v-autocomplete>
+    
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="auto" align-self="center">
@@ -42,12 +57,14 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data: function(){
     return {
       search: '',
       name:'',
-      id:''
+      id:'',
+      users: []
     }
   },
    computed:{
@@ -60,8 +77,7 @@ export default {
     }
   },
   created(){
-    this.name = sessionStorage.getItem('name');
-    this.id = sessionStorage.getItem('id');
+    this.getAllUsers();
   },
   methods:{
     ongrabname(namesentinevent){
@@ -72,7 +88,34 @@ export default {
     logout(){
        sessionStorage.clear();
        this.$router.push('/login')
-    }
+    },
+    getAllUsers(){
+       axios.get('/backend/users')
+        .then(response => {
+            console.log(response.data)
+            var users = response.data
+            users.forEach(element => element.fullName = element.firstName + ' ' + element.lastName)
+            this.users = users
+           console.log('get all users, ', this.users)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    },
+     customFilter (item, queryText) {
+        const textOne = item.firstName.toLowerCase()
+        const textTwo = item.lastName.toLowerCase()
+        const searchText = queryText.toLowerCase()
+        return textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1
+      },
+      autocompleteChanged(){
+        var selectedUser = this.users.find(item => item.fullName == this.search);
+        this.$router.push({ name: 'timeline', params: { id: selectedUser._id } });
+        console.log('search1', this.search)
+        this.search = '';
+        console.log('search2', this.search)
+      
+      }
   }
 }
 </script>

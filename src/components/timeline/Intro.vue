@@ -1,5 +1,5 @@
 <template>
-    <v-card flat outlined>
+    <v-card v-if="this.introduction != '' && this.introduction != undefined" flat outlined class="mb-3">
         <v-container>
         <v-row>
             <v-col class="py-0 pr-0">
@@ -100,7 +100,7 @@ export default {
             id: this.id
         }})
         .then(response => {
-            console.log(response)
+            console.log('user intro created ', response)
             this.introduction = response.data.introduction
         })
         .catch(error => {
@@ -113,7 +113,7 @@ export default {
             id: to.params.id
         }})
         .then(response => {
-            console.log(response)
+             console.log('user intro watched ', response)
             this.introduction = response.data.introduction
         })
         .catch(error => {

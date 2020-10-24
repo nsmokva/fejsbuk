@@ -1,16 +1,16 @@
 <template>
-   <div>
-       <v-container>
+       <v-container class="pt-0">
             <v-row class="white" align="center">
-                <v-col cols="auto"><v-icon size="50" color="grey">mdi-account</v-icon></v-col>
-                <v-col cols="auto"><span class="text-h5 grey--text font-weight-bold">Information</span></v-col>
+                <v-col cols="auto"><v-icon size="35" color="grey">mdi-account</v-icon></v-col>
+                <v-col cols="auto" class="pl-0"><span class="text-h6 grey--text text--darken-2 font-weight-bold">Information</span></v-col>
             </v-row>
+            <v-divider></v-divider>
             <v-row class="white">
-                <v-col cols="4">
-                    <v-list-item :to="{name: 'allinfo'}"><v-list-item-content><p class="pt-3 pb-3 text-h6 grey--text">All info</p></v-list-item-content></v-list-item>
-                    <v-list-item :to="{name:'basicinfo'}"><v-list-item-content><p class="pt-3 pb-3 text-h6 grey--text">Basic info</p></v-list-item-content></v-list-item>
-                    <v-list-item :to="{name: 'contact'}"><v-list-item-content><p class="pt-3 pb-3 text-h6 grey--text">Contact</p></v-list-item-content></v-list-item>
-                    <v-list-item :to="{name: 'job'}"><v-list-item-content><p class="pt-3 pb-3 text-h6 grey--text">Education and Job</p></v-list-item-content></v-list-item>
+                <v-col cols="4" class="pl-0">
+                    <v-list-item :to="{name: 'allinfo'}" active-class="ninaactive"><v-list-item-content><p class="pt-0 pb-0 mb-0 font-weight-light text-h6 grey--text">All info</p></v-list-item-content></v-list-item>
+                    <v-list-item :to="{name:'basicinfo'}" active-class="ninaactive"><v-list-item-content><p class="pt-0 pb-0 mb-0 font-weight-light text-h6 grey--text">Basic info</p></v-list-item-content></v-list-item>
+                    <v-list-item :to="{name: 'contact'}" active-class="ninaactive"><v-list-item-content><p class="pt-0 pb-0 mb-0 font-weight-light text-h6 grey--text">Contact</p></v-list-item-content></v-list-item>
+                    <v-list-item :to="{name: 'job'}"  active-class="ninaactive"><v-list-item-content><p class="pt-0 pb-0 mb-0 font-weight-light text-h6 grey--text">Education and Job</p></v-list-item-content></v-list-item>
                 </v-col>
                 <v-col cols="8">
                   <router-view :editedcity="editcity" :editedemail2="editemail2" :editedjob="editjob" :editededucation="editeducation" v-on:opendialog="opendialog"></router-view>
@@ -43,7 +43,6 @@
                 </v-col>
             </v-row>
         </v-container>
-   </div>
 </template>
 
 <script>
@@ -112,6 +111,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.v-list-item--link:before {
+    background-color: white;
+}
+.ninaactive{
+    color: black 1important;
+    border-left: 5px solid #4667ac;
+}
+.v-list-item__content{
+    padding: 0;
+}
+.ninaactive .v-list-item__content p{
+    color: black !important;
+    font-weight: 400 !important;
+}
 
 </style>

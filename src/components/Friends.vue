@@ -5,22 +5,21 @@
         <v-container class="secondary pt-0" fluid>
             <v-container class="pt-0 white">
                 <v-row class="white" align="center">
-                    <v-col cols="auto"><v-icon size="50" color="grey">mdi-account-multiple</v-icon></v-col>
-                    <v-col cols="auto"><span class="text-h5 grey--text font-weight-bold">Friends</span></v-col>
+                    <v-col cols="auto"><v-icon size="35" color="grey">mdi-account-multiple</v-icon></v-col>
+                    <v-col cols="auto" class="pl-0"><span class="text-h6 grey--text text--darken-2 font-weight-bold pl-0">Friends</span></v-col>
                 </v-row>
-                <v-row>
+                <v-divider></v-divider>
+                <v-row class="pl-3">
                     <v-col v-for="user in users" :key="user.name" cols="6" class="pb-0">
                         <v-card flat outlined min-width="350">
                                <v-row>
                                    <v-col cols="auto" class="pa-0">
                                        <v-card tile outlined :to= "{ name: 'timeline', params: { id: user._id }}">
-                                            <v-avatar size="100" tile>
-                                                 <span class="primary--text">{{user.firstName}}</span>
-                                                <!-- <v-img :src="require('../../public/Ivica.jpg')"></v-img> -->
-                                            </v-avatar>
+                                            <v-img v-if="user.photoName != undefined && user.ohotoName != ''" :src="'/backend/user/images/' + user.photoName" height="100" width="100"></v-img>
+                                            <v-img v-else :src="require('../../public/default.jpeg')" height="100" width="100"></v-img>
                                         </v-card>
                                    </v-col>
-                                   <v-col cols="auto" class="primary--text font-weight-medium">
+                                   <v-col cols="auto" class="primary--text font-weight-medium text-body-2" align-self="center">
                                        {{user.firstName}} {{user.lastName}}
                                    </v-col>
                                </v-row>
@@ -37,12 +36,10 @@
             <v-card tile outlined>
             <v-row class="ma-0 pa-1">
                 <v-col v-for="user in users" :key="user.name" cols="4" class="pa-1">
-                                       <v-card tile outlined :to= "{ name: 'timeline', params: { id: user._id }}">
-                                            <v-avatar size="100" tile>
-                                                 <span class="primary--text">{{user.firstName}}</span>
-                                                <!-- <v-img :src="require('../../public/Ivica.jpg')"></v-img> -->
-                                            </v-avatar>
-                                            <span class="primary--text">{{user.firstName}} {{user.lastName}}</span>
+                                       <v-card tile elevation="0" :to= "{ name: 'timeline', params: { id: user._id }}">
+                                            <v-img v-if="user.photoName != undefined && user.ohotoName != ''" :src="'/backend/user/images/' + user.photoName" width="auto" aspect-ratio='1'></v-img>
+                                            <v-img v-else :src="require('../../public/default.jpeg')" width="auto" aspect-ratio='1'></v-img>
+                                            <span class="primary--text text-caption">{{user.firstName}} {{user.lastName}}</span>
                                         </v-card>
     
                     </v-col>
@@ -107,3 +104,6 @@ export default {
 } 
 }
 </script>
+<style>
+   
+</style>
