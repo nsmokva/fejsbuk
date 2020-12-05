@@ -75,11 +75,8 @@ export default {
             introduction: this.introduction,
             })
             .then(response => {
-                console.log(response);
-                console.log(response.data.introduction)
                 this.introduction = response.data.introduction
                 this.opentextarea = false
-                console.log(this.introduction)
             })
             .catch(function (error) {
                 console.log(error);
@@ -100,7 +97,6 @@ export default {
             id: this.id
         }})
         .then(response => {
-            console.log('user intro created ', response)
             this.introduction = response.data.introduction
         })
         .catch(error => {
@@ -113,7 +109,6 @@ export default {
             id: to.params.id
         }})
         .then(response => {
-             console.log('user intro watched ', response)
             this.introduction = response.data.introduction
         })
         .catch(error => {

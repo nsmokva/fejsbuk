@@ -68,8 +68,6 @@ export default {
             education: this.editeducation       
         })
         .then(response => {
-            console.log(response);
-            console.log(response.data.city)
             this.editcity = response.data.city
             this.editemail2 = response.data.email2
             this.editjob = response.data.job
@@ -98,7 +96,6 @@ export default {
             id: this.id
         }})
         .then(response => {
-            console.log(response)
             this.editcity = response.data.city
             this.editemail2 = response.data.email2
             this.editjob = response.data.job

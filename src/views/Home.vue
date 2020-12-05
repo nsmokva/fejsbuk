@@ -1,60 +1,30 @@
 <template>
     <div>
-        <!-- <p>Home page</p>
-        <v-btn :to= "{ name: 'timeline', params: { id: id }}">Go To Profile</v-btn>
-        {{name}} -->
-
         <v-container class="secondary pt-0" fluid>
             <v-container>
-                <v-row>
-                    <v-col>
-                        {{statuses}}
-
-                    </v-col>
-                </v-row>
-            </v-container>
-            
-
-        </v-container>
-
-
-
-        
+                <statuses :id="id" :loggedInUser="loggedInUser" :showAddStatus="true"></statuses>
+            </v-container> 
+        </v-container>   
     </div>
 </template>
 
 <script>
-import axios from 'axios'
+import Statuses from '../components/Statuses.vue'
 export default {
     data: function(){
         return{
-            name:'',
-            id: '',
-            statuses: []
+            loggedInUserName:'',
+            id: ''
         }
     },
-    methods: {
-        getAllStatuses(){
-            axios.get('/backend/statuses/all')
-            .then(response => {
-                response.data.forEach(status => {
-                    status.openCommentField = false
-                });
-                //change the order from newer to older
-            this.statuses = response.data.reverse()
-            console.log('statuses', this.statuses)
-            })
-            .catch(error => {
-                console.log('error is', error)
-            })
-            }
+    props: ['loggedInUser'],
+    components:{
+        Statuses
     },
     created(){
-        this.name = sessionStorage.getItem('name');
+        this.loggedInUserName = sessionStorage.getItem('name');
         this.id = sessionStorage.getItem('id');
-        this.$emit('grabname', {name: this.name, id: this.id})
-        this.getAllStatuses()
-
+        this.$emit('grabname', {loggedInUserName: this.loggedInUserName, id: this.id})
     }
 }
 </script>

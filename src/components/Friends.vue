@@ -15,7 +15,7 @@
                                <v-row>
                                    <v-col cols="auto" class="pa-0">
                                        <v-card tile outlined :to= "{ name: 'timeline', params: { id: user._id }}">
-                                            <v-img v-if="user.photoName != undefined && user.ohotoName != ''" :src="'/backend/user/images/' + user.photoName" height="100" width="100"></v-img>
+                                            <v-img v-if="user.photoName != undefined && user.photoName != ''" :src="'/backend/user/images/' + user.photoName" height="100" width="100"></v-img>
                                             <v-img v-else :src="require('../../public/default.jpeg')" height="100" width="100"></v-img>
                                         </v-card>
                                    </v-col>
@@ -68,11 +68,8 @@ export default {
     created(){
         axios.get('/backend/users')
         .then(response => {
-            console.log(response.data)
             var allUsers = response.data
             this.users = allUsers.filter(item => item._id != this.id);
-            console.log(this.id)
-            console.log(this.users)
         })
         .catch(error => {
             console.log(error)
@@ -91,11 +88,8 @@ export default {
     $route (to){
         axios.get('/backend/users')
         .then(response => {
-            console.log(response.data)
             var allUsers = response.data
             this.users = allUsers.filter(item => item._id != to.params.id); 
-            console.log(this.id)
-            console.log(this.users)
         })
         .catch(error => {
             console.log(error)

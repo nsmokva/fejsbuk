@@ -29,7 +29,7 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="auto" align-self="center">
-         <router-link :to = "{ name: 'timeline', params: { id: id }}"><span class="white--text text-h6">{{name}}</span></router-link>
+         <router-link :to = "{ name: 'timeline', params: { id: id }}"><span class="white--text text-h6">{{loggedInUserName}}</span></router-link>
         </v-col>
          <v-col cols="auto" align-self="center">
          <router-link :to = "{ name: 'home'}"><span class="white--text text-h6">Home</span></router-link>
@@ -52,7 +52,7 @@
       </v-container>
 
     <!-- content -->
-    <router-view v-on:grabname="ongrabname"></router-view>
+    <router-view v-on:grabname="ongrabname" :loggedInUser="loggedInUser"></router-view>
   </v-app>
 </template>
 
@@ -62,9 +62,14 @@ export default {
   data: function(){
     return {
       search: '',
-      name:'',
+      loggedInUserName:'',
       id:'',
-      users: []
+      users: [],
+      loggedInUser:{
+        firstName: '',
+        lastName: '',
+        photoname: ''
+      }
     }
   },
    computed:{
@@ -78,12 +83,29 @@ export default {
   },
   created(){
     this.getAllUsers();
+    this.askforuserdata();
+    console.log('app created')
   },
   methods:{
+    askforuserdata(){
+       if (this.$route.name !== 'login' && this.$route.name !== 'notFound'){
+        console.log('asking for user data from app created')
+        axios.get('/backend/user', {params: {
+        id: sessionStorage.getItem('id')
+        }})
+        .then(response => {
+            this.loggedInUser.firstName = response.data.firstName
+            this.loggedInUser.lastName = response.data.lastName
+            this.loggedInUser.photoname = response.data.photoName
+        })
+        .catch(error => {
+            console.log(error)
+        })
+      } 
+    },
     ongrabname(namesentinevent){
-      this.name = namesentinevent.name
+      this.loggedInUserName = namesentinevent.loggedInUserName
       this.id = namesentinevent.id
-      console.log('ongrabname')
     },
     logout(){
        sessionStorage.clear();
@@ -92,11 +114,9 @@ export default {
     getAllUsers(){
        axios.get('/backend/users')
         .then(response => {
-            console.log(response.data)
             var users = response.data
             users.forEach(element => element.fullName = element.firstName + ' ' + element.lastName)
             this.users = users
-           console.log('get all users, ', this.users)
         })
         .catch(error => {
             console.log(error)
@@ -111,12 +131,13 @@ export default {
       autocompleteChanged(){
         var selectedUser = this.users.find(item => item.fullName == this.search);
         this.$router.push({ name: 'timeline', params: { id: selectedUser._id } });
-        console.log('search1', this.search)
-        this.search = '';
-        console.log('search2', this.search)
-      
+        this.search = '';      
       }
-  }
+  },
+  updated (){
+    this.askforuserdata();
+    console.log('app updated')
+  },
 }
 </script>
 

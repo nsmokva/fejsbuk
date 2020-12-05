@@ -8,7 +8,7 @@
                         <v-avatar color="white" size="240">
                             <v-avatar size="230">
                                 <v-hover v-slot:default="{ hover }">  
-                                    <v-img :src="'/backend/user/images/' + photoname" height="230" width="230">
+                                    <v-img :src="'/backend/user/images/' + profileOwnerUser.photoname" height="230" width="230">
                                         <template v-if="profileBelongsToLoggedInUser()">
                                             <v-expand-transition>
                                                 <v-file-input v-if="hover" class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal display-3" style="height: 50%;" hide-input v-model="file" @change="filechanged" prepend-icon="mdi-camera"></v-file-input>
@@ -16,21 +16,12 @@
                                         </template>
                                     </v-img>
                                 </v-hover> 
-
-
-
-
-                                   
-                                
-                                <!-- <span class="primary--text headline">{{name.firstName}}</span> -->
-                              
-                                <!-- <v-btn @click="uploadphoto">Upload Photo</v-btn> -->
                             </v-avatar>
                         </v-avatar>
                     </v-avatar>
                 </v-col>
                 <v-col class="white--text text-h4">
-                    {{name.firstName}} {{name.lastName}}
+                    {{profileOwnerUser.firstName}} {{profileOwnerUser.lastName}}
                 </v-col>
                 </v-row>
                 <v-row class="white" justify="end">
@@ -49,7 +40,7 @@
                      <v-divider vertical></v-divider>
                 </v-row>
             </v-container>
-            <router-view :firstName="name.firstName" :lastName="name.lastName" :photoname="photoname"></router-view>
+            <router-view :profileOwnerUser="profileOwnerUser" :loggedInUser="loggedInUser"></router-view>
         </v-container>
     </div>
 </template>
@@ -59,54 +50,33 @@ import axios from 'axios'
 export default {
     data: function(){
         return{
-            name: {
+            profileOwnerUser: {
                 firstName: '',
-                lastName: ''
+                lastName: '',
+                photoname: ''
             },
-            file: '',
-            photoname: ''
+            loggedInUserName: '',
+            file: ''
         }
     },
+    props: ['loggedInUser', 'id'],
     methods:{
         askforuserdata(){
+        if (this.$route.name !== 'login' && this.$route.name !== 'notFound'){
+            console.log('asking for user data from app created')
             axios.get('/backend/user', {params: {
-            id: this.$route.params.id
+            id: this.id
             }})
             .then(response => {
-                this.name.firstName = response.data.firstName
-                this.name.lastName = response.data.lastName
-                this.photoname = response.data.photoName
+                this.profileOwnerUser.firstName = response.data.firstName
+                this.profileOwnerUser.lastName = response.data.lastName
+                this.profileOwnerUser.photoname = response.data.photoName
             })
             .catch(error => {
                 console.log(error)
             })
+        } 
         },
-        /*uploadphoto(){
-            let formData = new FormData();
-            formData.append('upload', this.file);
-            axios.post( '/backend/user/images/' + this.file.name,
-                formData,
-                {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-              }
-            ).then(()=>{
-                this.photoname = this.file.name
-                console.log('file: ', this.file)
-                axios.post('/backend/user/userdata/photoname', {
-                id: sessionStorage.getItem('id'),
-                photoname: this.file.name
-                })
-                .then(response => {
-                    console.log('response of photoname: ', response);
-                    
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-                })
-        },*/
         filechanged(p){
               let formData = new FormData();
             formData.append('upload', p);
@@ -119,7 +89,6 @@ export default {
               }
             ).then(()=>{
                 this.photoname = p.name
-                console.log('file: ', p)
                 axios.post('/backend/user/userdata/photoname', {
                 id: sessionStorage.getItem('id'),
                 photoname: p.name
@@ -145,11 +114,14 @@ export default {
     
     },
     created (){
-       this.askforuserdata();
+        this.askforuserdata()
+        this.loggedInUserName = sessionStorage.getItem('name');
+        this.id = sessionStorage.getItem('id');
+        this.$emit('grabname', {loggedInUserName: this.loggedInUserName, id: this.id})
     },
-    updated (){
-       this.askforuserdata();
-    },
+    updated () {
+        this.askforuserdata()
+    }
 }
 </script>
 

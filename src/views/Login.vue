@@ -109,7 +109,7 @@
                             <v-radio label="Female" value="female"></v-radio>
                             <v-radio label="Male" value="male"></v-radio>
                           </v-radio-group>
-                          <v-btn class="text-h5 text-capitalize mt-2 font-weight-medium" color="accent" large>Create Account</v-btn>
+                          <v-btn class="text-h5 text-capitalize mt-2 font-weight-medium" color="accent" large @click="register">Create Account</v-btn>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -178,6 +178,9 @@ export default {
         .catch(error => {
           console.log(error)
         })
+      },
+      register(){
+        
       }
     }
 }

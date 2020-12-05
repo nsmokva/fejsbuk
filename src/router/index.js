@@ -21,7 +21,7 @@ Vue.use(VueRouter)
       component: Login
     },
     {
-      path: '/:id/home',
+      path: '/home',
       name: 'home',
       component: Home,
       meta: {requiresAuth: true},
