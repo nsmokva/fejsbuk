@@ -1,4 +1,5 @@
 <template>
+<div>
     <v-card v-if="this.introduction != '' && this.introduction != undefined" flat outlined class="mb-3">
         <v-container>
         <v-row>
@@ -56,6 +57,7 @@
         </v-row>
         </v-container>
     </v-card>
+    </div>
 </template>
 
 <script>

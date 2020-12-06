@@ -44,15 +44,15 @@
                     <v-dialog width="500">
                         <template v-slot:activator="{ on, attrs }">
                             <v-col v-bind="attrs" v-on="on" >
-                                <v-icon color="primary" size="15">mdi-thumb-up-outline</v-icon>
-                                <span class="grey--text text-caption"> {{status.likes.length}} {{likeOrLikes(status.likes.length)}} this</span>
+                                <v-icon class="pr-2" color="grey" size="15">mdi-thumb-up-outline</v-icon>
+                                <span class="grey--text text-caption">{{likeOrLikes(status.likes)}} this</span>
                             </v-col>
                         </template>
                         <v-card class="pa-6">
                             <v-icon color="primary" size="15">mdi-thumb-up-outline</v-icon>
                             <span class="grey--text text-caption"> {{status.likes.length}}</span>
                             <v-divider></v-divider>
-                            <p v-for="like in status.likes" :key="like" class="grey--text text-subtitle-1 mb-0 mt-4">{{like}}</p>
+                            <p v-for="like in status.likes" :key="like.id" class="grey--text text-subtitle-1 mb-0 mt-4">{{like.fullName}}</p>
                         </v-card>
                     </v-dialog>
                 </v-col>
@@ -68,8 +68,14 @@
             <v-divider></v-divider>
             <v-row justify="space-around">
                 <v-col cols="auto" @click="like(status._id)">
-                    <v-icon color="grey">mdi-thumb-up-outline</v-icon>
-                    <span class="grey--text font-weight-medium"> Like</span>
+                    <template v-if="LoggedInUserLikedAStatus(status.likes)">
+                        <v-icon color="grey">mdi-thumb-up-outline</v-icon>
+                        <span class="grey--text font-weight-medium"> Like</span>
+                    </template>
+                    <template v-else>
+                        <v-icon color="primary">mdi-thumb-up-outline</v-icon>
+                        <span class="primary--text font-weight-medium"> Like</span>
+                    </template>
                 </v-col>
                 <v-col cols="auto" @click="status.openCommentField = !status.openCommentField">
                     <v-icon color="grey">mdi-comment-outline</v-icon>
@@ -171,11 +177,20 @@ export default {
                 return false
             }
         },
-         likeOrLikes(number){
-            if(number == 1){
-                return 'person likes'
+         likeOrLikes(likes){
+            if(likes.length == 1){
+                return likes[0].fullName + ' likes'
             }else{
-                return 'people like'
+                return likes.length + ' people like'
+            }
+        },
+        LoggedInUserLikedAStatus(likes){
+            var LoggedInUserId = sessionStorage.getItem('id'); 
+            const found = likes.findIndex(element => element.likeOwnerId === LoggedInUserId);
+              if (found == -1){
+                return true
+            } else{
+                return false
             }
         },
         postComment(id){
@@ -223,8 +238,13 @@ export default {
         },
         like(id){
             var name = sessionStorage.getItem('name');
-            var lastName = sessionStorage.getItem('lastName')
-            var like = name + ' ' + lastName
+            var lastName = sessionStorage.getItem('lastName');
+            var likeOwnerId = sessionStorage.getItem('id'); 
+            var like = {
+                fullName: name + ' ' + lastName,
+                likeOwnerId: likeOwnerId
+            }
+            console.log('like: ', like)
             axios.post('/backend/statuses/likes', {
                 id: id,
                 like: like
