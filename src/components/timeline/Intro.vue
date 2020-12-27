@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-card v-if="this.introduction != '' && this.introduction != undefined" flat outlined class="mb-3">
+    <v-card v-if="this.introduction != '' && this.introduction != undefined || profileBelongsToLoggedInUser()" flat outlined class="mb-3">
         <v-container>
         <v-row>
             <v-col class="py-0 pr-0">

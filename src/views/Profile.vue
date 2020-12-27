@@ -11,7 +11,7 @@
                                     <v-img :src="'/backend/user/images/' + profileOwnerUser.photoname" height="230" width="230">
                                         <template v-if="profileBelongsToLoggedInUser()">
                                             <v-expand-transition>
-                                                <v-file-input v-if="hover" class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal display-3" style="height: 50%;" hide-input v-model="file" @change="filechanged" prepend-icon="mdi-camera"></v-file-input>
+                                                <v-file-input v-if="hover" class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal display-3" style="height: 50%;" hide-input @change="filechanged" prepend-icon="mdi-camera"></v-file-input>
                                             </v-expand-transition>
                                         </template>
                                     </v-img>
@@ -55,15 +55,13 @@ export default {
                 lastName: '',
                 photoname: ''
             },
-            loggedInUserName: '',
-            file: ''
+            loggedInUserName: ''
         }
     },
     props: ['loggedInUser', 'id'],
     methods:{
         askforuserdata(){
         if (this.$route.name !== 'login' && this.$route.name !== 'notFound'){
-            console.log('asking for user data from app created')
             axios.get('/backend/user', {params: {
             id: this.id
             }})
@@ -93,9 +91,8 @@ export default {
                 id: sessionStorage.getItem('id'),
                 photoname: p.name
                 })
-                .then(response => {
-                    console.log('response of photoname: ', response);
-                    
+                .then(() => {
+                    this.profileOwnerUser.photoname = p.name
                 })
                 .catch(function (error) {
                     console.log(error);

@@ -35,7 +35,7 @@
         <v-container class="white pa-0">
             <v-card tile outlined>
             <v-row class="ma-0 pa-1">
-                <v-col v-for="user in users" :key="user.name" cols="4" class="pa-1">
+                <v-col v-for="user in nineUsers" :key="user.name" cols="4" class="pa-1">
                                        <v-card tile elevation="0" :to= "{ name: 'timeline', params: { id: user._id }}">
                                             <v-img v-if="user.photoName != undefined && user.ohotoName != ''" :src="'/backend/user/images/' + user.photoName" width="auto" aspect-ratio='1'></v-img>
                                             <v-img v-else :src="require('../../public/default.jpeg')" width="auto" aspect-ratio='1'></v-img>
@@ -58,10 +58,12 @@
 
 <script>
 import axios from 'axios'
+import _ from 'underscore'
 export default {
     data: function(){
         return {
             users: [],
+            nineUsers: []
         }
     },
     props:['id'],
@@ -70,6 +72,12 @@ export default {
         .then(response => {
             var allUsers = response.data
             this.users = allUsers.filter(item => item._id != this.id);
+            var shuffledUsers = _.shuffle(this.users)
+            if(shuffledUsers.length <= 9){
+                this.nineUsers = shuffledUsers
+            }else{
+                this.nineUsers = shuffledUsers.slice(0,9)
+                }
         })
         .catch(error => {
             console.log(error)

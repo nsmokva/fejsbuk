@@ -210,10 +210,7 @@ export default {
              .then(response => {
                const currentStatus = this.statuses.find(status => status._id === id);
                 currentStatus.comments = response.data.comments
-                this.comment = ''
-                console.log('cccccccccccccccccccccccccccccccccccc', response.data.comments)
-              
-                
+                this.comment = ''                
             })
 
             .catch(function (error) {
@@ -244,7 +241,6 @@ export default {
                 fullName: name + ' ' + lastName,
                 likeOwnerId: likeOwnerId
             }
-            console.log('like: ', like)
             axios.post('/backend/statuses/likes', {
                 id: id,
                 like: like
@@ -294,7 +290,6 @@ export default {
                 //change the order from newer to older
                 this.statuses = response.data.reverse()
                 this.$emit('emitListOfStatuses', {listOfStatuses: this.statuses})
-                console.log('Logging statuses ', this.statuses)
             })
             .catch(error => {
                 console.log('error is', error)

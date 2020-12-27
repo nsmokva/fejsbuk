@@ -3,6 +3,7 @@
         <v-container class="secondary pt-0" fluid>
             <v-container>
                 <statuses :id="id" :loggedInUser="loggedInUser" :showAddStatus="true"></statuses>
+                <welcome :dialog="dialog" :firstName="loggedInUser.firstName" @closeDialog="onCloseDialog"></welcome>
             </v-container> 
         </v-container>   
     </div>
@@ -10,6 +11,7 @@
 
 <script>
 import Statuses from '../components/Statuses.vue'
+import Welcome from '../components/Welcome.vue'
 export default {
     data: function(){
         return{
@@ -17,9 +19,15 @@ export default {
             id: ''
         }
     },
-    props: ['loggedInUser'],
+    props: ['loggedInUser', "dialog", "firstName"],
     components:{
-        Statuses
+        Statuses,
+        Welcome
+    },
+    methods: {
+        onCloseDialog(value){
+            this.$emit('closeDialogAtHome', value)
+        }
     },
     created(){
         this.loggedInUserName = sessionStorage.getItem('name');

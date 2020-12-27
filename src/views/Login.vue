@@ -13,11 +13,11 @@
                              <v-row align="end">
                                  <v-col>
                                     <p class="text-h6 white--text">Email or Phone</p>
-                                    <v-text-field v-model="email" class="pt-0 mt-0" background-color="white" hide-details></v-text-field>
+                                    <v-text-field v-model="email" class="pt-0 mt-0" filled dense background-color="white" hide-details></v-text-field>
                                  </v-col>
                                  <v-col>
                                     <p class="text-h6 white--text">Password</p>
-                                    <v-text-field v-model="password" class="pt-0 mt-0" background-color="white" hide-details type="password"></v-text-field>
+                                    <v-text-field v-model="password" class="pt-0 mt-0" filled dense background-color="white" hide-details :type="passwordTypeLogin" :append-icon="iconLogin" @click:append="togglePasswordVisibility"></v-text-field>
                                  </v-col>
                                  <v-col cols="auto">
                                     <v-btn class="text-h6 white--text text-capitalize" color="#5872A6" @click="login">Log In</v-btn>
@@ -67,51 +67,53 @@
                         <v-col cols="5">
                           <p class="text-h3">Sign Up</p> 
                           <p class="text-h5">It's free and always will be.</p>
+                          <v-form ref="form">
                           <v-row>
-                            <v-col cols="6" class="pt-2 pb-2 pr-2">
-                              <v-text-field placeholder="First Name" outlined background-color="white" dense hide-details></v-text-field>
+                            <v-col cols="6" class="pt-0 pb-0 pr-2">
+                              <v-text-field v-model="firstName" placeholder="First Name" outlined background-color="white" dense :rules="nameRules"></v-text-field>
                             </v-col>
-                            <v-col cols="6" class="pt-2 pb-2 pl-2">
-                              <v-text-field placeholder="Last Name" outlined background-color="white" dense hide-details></v-text-field>
+                            <v-col cols="6" class="pt-0 pb-0 pl-2">
+                              <v-text-field v-model="lastName" placeholder="Last Name" outlined background-color="white" dense :rules="nameRules"></v-text-field>
                             </v-col>
                           </v-row>
                            <v-row>
-                            <v-col class="pt-2 pb-2">
-                              <v-text-field placeholder="Email or mobile number" outlined background-color="white" dense hide-details></v-text-field>
+                            <v-col class="pt-0 pb-0">
+                              <v-text-field v-model="mail" placeholder="Email" outlined background-color="white" dense :rules="emailRules" validate-on-blur></v-text-field>
                             </v-col>
                           </v-row>
                           <v-row>
-                            <v-col class="pt-2 pb-2">
-                              <v-text-field placeholder="Re-enter email or mobile number" outlined background-color="white" dense hide-details></v-text-field>
+                            <v-col class="pt-0 pb-0">
+                              <v-text-field v-model="pword" placeholder="Password" outlined background-color="white" dense :rules="pwordRules" validate-on-blur type="password"></v-text-field>
                             </v-col>
                           </v-row>
                           <v-row>
-                            <v-col class="pt-2 pb-2">
-                              <v-text-field placeholder="New password" outlined background-color="white" dense hide-details></v-text-field>
+                            <v-col class="pt-0 pb-0">
+                              <v-text-field v-model="pwordReEntered" placeholder=" Re-enter password" outlined background-color="white" dense :rules="pwordReEnteredRules" validate-on-blur type="password"></v-text-field>
                             </v-col>
                           </v-row>
-                          <p class="text-h5 mb-0 pt-4">Birthday</p>
+                          <p class="text-h6 mb-0 pt-0 font-weight-light">Birthday</p>
                           <v-row>
-                            <v-col cols="2" class="pr-0 pt-1">
-                              <v-select v-model="monthOfBirth" :items="months" dense outlined solo flat hide-details>
+                            <v-col cols="2" class="pr-0 pt-1 pb-0">
+                              <v-select v-model="monthOfBirth" :items="months" dense outlined solo flat menu-props="offset-y" :rules="bdayRules" label="Month">
                               </v-select>
                             </v-col>
-                             <v-col cols="2" class="pl-0 pr-0 pt-1">
-                              <v-select v-model="dayOfBirth" :items="days" dense outlined solo flat hide-details>
+                             <v-col cols="2" class="pl-0 pr-0 pt-1 pb-0">
+                              <v-select v-model="dayOfBirth" :items="days" dense outlined solo flat menu-props="offset-y" :rules="bdayRules" label="Day">
                               </v-select>
                             </v-col>
-                             <v-col cols="2" class="pl-0 pt-1">
-                              <v-select  v-model="yearOfBirth" :items="years" dense outlined solo flat hide-details menu-props="offset-y">
+                             <v-col cols="2" class="pl-0 pt-1 pb-0">
+                              <v-select  v-model="yearOfBirth" :items="years" dense outlined solo flat menu-props="offset-y" :rules="bdayRules" label="Year">
                               </v-select>
                             </v-col>
                           </v-row>
-                          <v-radio-group v-model="gender" row>
+                          <v-radio-group v-model="gender" row class="pt-0 mt-0">
                             <v-radio label="Female" value="female"></v-radio>
                             <v-radio label="Male" value="male"></v-radio>
                           </v-radio-group>
                           <v-btn class="text-h5 text-capitalize mt-2 font-weight-medium" color="accent" large @click="register">Create Account</v-btn>
+                          </v-form>
                         </v-col>
-                    </v-row>
+                    </v-row> 
                 </v-container>
             </v-row>
         </v-container>
@@ -135,11 +137,52 @@ export default {
       return{
         email: '',
         password: '',
-        monthOfBirth: "Jan",
-        dayOfBirth: 1,
-        yearOfBirth: 2000,
+        passwordTypeLogin: 'password',
+        iconLogin: 'mdi-eye',
+        firstName: '',
+        lastName: '',
+        mail: '',
+        pword: '',
+        pwordReEntered: '',
+        monthOfBirth: "",
+        dayOfBirth: null,
+        yearOfBirth: null,
         gender: '',
-        months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        nameRules: [v => v.length >= 1 || 'This field is mandatory'],
+        emailRules: [v => {
+          if(v.length == 0){
+            return 'This field is mandatory'
+          }else if (v.length >= 1 && v.search("@") == -1){
+               return 'Your email adress should be similar to user@mail.com'
+          }else{
+            return true
+          }
+        }],
+        pwordRules: [ v => {
+          if(v.length == 0){
+            return 'This field is mandatory'
+          }else if(v.length < 4){
+            return 'Password has to have at least 4 digits'
+          }else{
+            return true          }
+        }],
+        pwordReEnteredRules: [v => {
+          if(v == this.pword){
+            return true
+          }else if (v.length == 0){
+            return "Re-enter the password"
+          }else{
+            return "Passwords not matching"
+          }
+        }],
+        bdayRules: [v => {
+          if (v == '' || v == null){
+            return 'This field is mandatory'
+          }else{
+            return true
+          }
+        }]
       }
     },
     computed:{
@@ -180,12 +223,50 @@ export default {
         })
       },
       register(){
-        
+        if(this.$refs.form.validate()){
+          var birthday = this.monthOfBirth + ' ' + this.dayOfBirth + ' ' + this.yearOfBirth;
+          axios.post('/backend/users', { 
+            firstName: this.firstName,
+            lastName: this.lastName,
+            mail: this.mail,
+            pword: this.pword,
+            birthday: birthday,
+            gender: this.gender
+        })
+        .then(response => {
+            console.log('response of registering user ', response)
+            sessionStorage.setItem('id', response.data._id);
+            sessionStorage.setItem('profileid', response.data._id);
+            sessionStorage.setItem('name', response.data.firstName);
+            sessionStorage.setItem('lastName', response.data.lastName);
+            this.$router.push({ name: 'home', params: { id: response.data._id } })
+            this.$confetti.start();
+            this.$emit('openDialog', {dialog: true})
+
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        }else{
+          console.log('form not valid')
+        }
+      },
+      togglePasswordVisibility(){
+        if(this.passwordTypeLogin == "password"){
+          this.passwordTypeLogin = "text"
+          this.iconLogin = 'mdi-eye-off'
+        }else{
+          this.passwordTypeLogin = "password"
+          this.iconLogin = 'mdi-eye'
+        }
+    
       }
     }
 }
 </script>
 
 <style scoped>
-
+  input:-internal-autofill-selected{
+    background-color: white !important;
+  }
 </style>

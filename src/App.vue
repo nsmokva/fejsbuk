@@ -1,9 +1,8 @@
 <template>
   <v-app>
-
     <!-- navbar -->
-      <v-container v-if="isNotLoginorNotFoundPage" class="primary pa-0" fluid>
-       <v-row>
+    <v-container v-if="isNotLoginorNotFoundPage" class="primary pa-0" fluid>
+      <v-row>
         <v-col cols="1">
         </v-col>
         <v-col cols="auto" class="py-0" align-self="center">
@@ -11,28 +10,14 @@
         </v-col>
         <v-col cols="3" align-self="center" class="pa-0">
           <!-- <v-text-field v-model="search" class="pt-0 mt-0" background-color="white" hide-details></v-text-field> -->
-          <v-autocomplete
-          v-model="search"
-          :items="users"
-          :filter="customFilter"
-          color="white"
-          item-text="fullName"
-          label="Search"
-          auto-select-first
-          clearable
-          solo
-          hide-details
-          dense
-          @change='autocompleteChanged'
-      ></v-autocomplete>
-    
+          <v-autocomplete v-model="search" :items="users" :filter="customFilter" color="white" item-text="fullName" label="Search" auto-select-first clearable solo hide-details dense @change='autocompleteChanged'></v-autocomplete>
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="auto" align-self="center">
-         <router-link :to = "{ name: 'timeline', params: { id: id }}"><span class="white--text text-h6">{{loggedInUserName}}</span></router-link>
+          <router-link :to = "{ name: 'timeline', params: { id: id }}"><span class="white--text text-h6">{{loggedInUserName}}</span></router-link>
         </v-col>
-         <v-col cols="auto" align-self="center">
-         <router-link :to = "{ name: 'home'}"><span class="white--text text-h6">Home</span></router-link>
+        <v-col cols="auto" align-self="center">
+          <router-link :to = "{ name: 'home'}"><span class="white--text text-h6">Home</span></router-link>
         </v-col>
         <v-col cols="auto" align-self="center">
           <v-menu offset-y nudge-bottom="14" left tile>
@@ -48,11 +33,10 @@
         </v-col>
         <v-col cols="1">
         </v-col>
-       </v-row>
-      </v-container>
-
+      </v-row>
+    </v-container>
     <!-- content -->
-    <router-view v-on:grabname="ongrabname" :loggedInUser="loggedInUser"></router-view>
+    <router-view v-on:grabname="ongrabname" @closeDialogAtHome="onCloseDialogAtHome" :loggedInUser="loggedInUser" v-on:openDialog="onOpenDialog" :dialog='dialog'></router-view>
   </v-app>
 </template>
 
@@ -69,10 +53,11 @@ export default {
         firstName: '',
         lastName: '',
         photoname: ''
-      }
+      },
+      dialog: false
     }
   },
-   computed:{
+  computed:{
     isNotLoginorNotFoundPage(){
       if (this.$route.name === 'login' || this.$route.name === 'notFound'){
         return false
@@ -82,30 +67,36 @@ export default {
     }
   },
   created(){
-    this.getAllUsers();
-    this.askforuserdata();
-    console.log('app created')
+    this.getAllUsers()
+    this.askforuserdata()
   },
   methods:{
     askforuserdata(){
-       if (this.$route.name !== 'login' && this.$route.name !== 'notFound'){
-        console.log('asking for user data from app created')
-        axios.get('/backend/user', {params: {
-        id: sessionStorage.getItem('id')
-        }})
+      if (this.$route.name !== 'login' && this.$route.name !== 'notFound'){
+        axios.get('/backend/user', {
+          params: {
+            id: sessionStorage.getItem('id')
+          }
+        })
         .then(response => {
-            this.loggedInUser.firstName = response.data.firstName
-            this.loggedInUser.lastName = response.data.lastName
-            this.loggedInUser.photoname = response.data.photoName
+          this.loggedInUser.firstName = response.data.firstName
+          this.loggedInUser.lastName = response.data.lastName
+          this.loggedInUser.photoname = response.data.photoName
         })
         .catch(error => {
-            console.log(error)
+          console.log(error)
         })
       } 
     },
     ongrabname(namesentinevent){
       this.loggedInUserName = namesentinevent.loggedInUserName
       this.id = namesentinevent.id
+    },
+    onOpenDialog(value){
+      this.dialog = value.dialog
+    },
+    onCloseDialogAtHome(value){
+      this.dialog = value.dialog
     },
     logout(){
        sessionStorage.clear();
@@ -136,7 +127,6 @@ export default {
   },
   updated (){
     this.askforuserdata();
-    console.log('app updated')
   },
 }
 </script>

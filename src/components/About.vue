@@ -13,7 +13,7 @@
                     <v-list-item :to="{name: 'job'}"  active-class="ninaactive"><v-list-item-content><p class="pt-0 pb-0 mb-0 font-weight-light text-h6 grey--text">Education and Job</p></v-list-item-content></v-list-item>
                 </v-col>
                 <v-col cols="8">
-                  <router-view :editedcity="editcity" :editedemail2="editemail2" :editedjob="editjob" :editededucation="editeducation" v-on:opendialog="opendialog"></router-view>
+                  <router-view :editedcity="editcity" :editedemail2="editemail2" :editedjob="editjob" :editededucation="editeducation" :bday="bday" v-on:opendialog="opendialog"></router-view>
                    <v-row class="white" justify="end" v-if="profileBelongsToLoggedInUser()">
                         <v-col cols="auto">
                             <v-dialog v-model="dialog" width="500">
@@ -55,6 +55,7 @@ export default {
             editemail2:'',
             editjob: '',
             editeducation:'',
+            bday: ''
         }
     },
     props:['id'],
@@ -100,6 +101,7 @@ export default {
             this.editemail2 = response.data.email2
             this.editjob = response.data.job
             this.editeducation = response.data.education
+            this.bday = response.data.birthday
         })
         .catch(error => {
             console.log(error)
