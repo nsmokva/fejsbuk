@@ -9,7 +9,7 @@ import Friends from "../components/Friends.vue"
 import AllInfo from "../components/about/AllInfo.vue"
 import BasicInfo from "../components/about/BasicInfo.vue"
 import Contact from "../components/about/Contact.vue"
-import Job from "../components/about/Job.vue"
+import JobAndEdu from "../components/about/JobAndEdu.vue"
 import NotFound from "../components/NotFound.vue"
 
 Vue.use(VueRouter)
@@ -24,6 +24,7 @@ Vue.use(VueRouter)
       path: '/home',
       name: 'home',
       component: Home,
+      props: true,
       meta: {requiresAuth: true},
     },
     {
@@ -64,7 +65,7 @@ Vue.use(VueRouter)
             {
               path: 'job',
               name: 'job',
-              component: Job
+              component: JobAndEdu
             }
           ]
         },
