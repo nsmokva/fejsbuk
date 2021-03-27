@@ -92,18 +92,10 @@ export default {
 	props: ['loggedInUser', 'profileOwnerUser', 'profileOwnerUserAboutData'],
 	methods:{
     profileBelongsToLoggedInUser(){
-      if(this.profileOwnerUser.id == this.loggedInUser.id){
-        return true
-      }else{
-        return false
-      }
+      return this.profileOwnerUser.id == this.loggedInUser.id
 		},
 		hasJob(){
-			if(this.profileOwnerUserAboutData.job == '' || this.profileOwnerUserAboutData.job == undefined){
-				return false
-			}else{
-				return true
-			}
+			return !(this.profileOwnerUserAboutData.job == '' || this.profileOwnerUserAboutData.job == undefined)
 		},
 		saveJob(){
 			axios.post('/backend/user/userdata/job', {
@@ -123,11 +115,7 @@ export default {
       this.addJob = !this.addJob
     },
 		hasEducation(){
-			if(this.profileOwnerUserAboutData.education == '' || this.profileOwnerUserAboutData.education == undefined){
-				return false
-			}else{
-				return true
-			}
+			return !(this.profileOwnerUserAboutData.education == '' || this.profileOwnerUserAboutData.education == undefined)
 		},
 		saveEducation(){
 			axios.post('/backend/user/userdata/education', {

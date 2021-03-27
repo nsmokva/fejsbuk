@@ -5,7 +5,7 @@
 				<!-- things on the right --> 
 				<v-col cols="4" class="pr-3">
 					<intro :loggedInUser="loggedInUser" :profileOwnerUser='profileOwnerUser'></intro>
-					<friends :id='id'></friends>
+					<friends :id='id' :compactView='true'></friends>
 				</v-col>
 				<!-- things on the left -->
 				<v-col cols="8" class="pr-0">

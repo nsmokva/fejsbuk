@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- to be shown on friends page -->
-		<template v-if="isFriends()">
+		<template v-if="!compactView">
 			<v-container class="secondary pt-0" fluid>
 				<v-container class="pt-0 white">
 					<v-row class="white" align="center">
@@ -57,7 +57,7 @@ export default {
 			nineUsers: []
 		}
 	},
-	props:['id', 'size'],
+	props:['id', 'compactView'],
 	created(){
 		axios.get('/backend/users')
 		.then(response => {
@@ -73,16 +73,6 @@ export default {
 		.catch(error => {
 				console.log(error)
 		})
-	},
-	methods: {
-		isFriends(){
-      // return this.size === 'small'
-			if (this.$route.name == 'friends') {
-				return true
-			} else {
-				return false
-			}
-		}
 	},
 	watch:{
 		$route (to){
