@@ -192,8 +192,8 @@ export default {
       return {
         firstName: this.registerData.firstName,
         lastName: this.registerData.lastName,
-        mail: this.registerData.mail,
-        pword: this.registerData.pword,
+        email: this.registerData.email,
+        password: this.registerData.password,
         birthday: this.registerData.monthOfBirth + ' ' + this.registerData.dayOfBirth + ' ' + this.registerData.yearOfBirth,
         gender: this.registerData.gender
       }
@@ -228,6 +228,7 @@ export default {
     },
     register(){
       if(this.$refs.form.validate()){
+        console.log('registed d c ----------------  ', this.registerDataComputed)
         axios.post('/backend/users', this.registerDataComputed)
         .then(response => {
           sessionStorage.setItem('id', response.data._id);
