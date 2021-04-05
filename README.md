@@ -1,5 +1,15 @@
-# fejsbuk
+# Fakebook
+Hi :) 
 
+Fakebook is a simple version of Facebook. It is made as an exercise project on my way beccoming self taught frontend programmer. Here are some screenshots of the app.
+
+![](public/loginPage.png)
+
+![](public/homePage.png)
+
+![](public/profilePage.png)
+
+![](public/about.png)
 ## Project setup
 ```
 npm install
