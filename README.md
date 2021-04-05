@@ -1,7 +1,7 @@
 # Fakebook
 Hi :) 
 
-Fakebook is a simple version of Facebook. It is made as an exercise project on my way beccoming self taught frontend programmer. Here are some screenshots of the app.
+Fakebook is a simple version of Facebook. It is made as an exercise project on my way of becoming self taught frontend programmer. Here are some screenshots of the app.
 
 ![](public/loginPage.png)
 
